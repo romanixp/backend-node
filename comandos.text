@@ -12,12 +12,15 @@ libreria producion
 
 //ubuntu  //siempre correr con sudo para ejecutarlo en modo administrador
 	forever /usr/lib/node_modules/node-inspector/bin/inspector.js --web-port=9999
-
-
+			http://127.0.0.1:9999/debug?port=5858 
+	//en otra consola correr
 	supervisor --debug server.js
 
 sudo npm install express.io --save
 sudo npm install swig --save
+sudo npm install connect-redis --save
 
 
+
+//nos quedamos en 1:06:11
 

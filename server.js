@@ -1,31 +1,49 @@
-var express = require('express');
+var express = require('express'),
+	swig = require('swig');
+
+var RedisStore = require('connect-redis')(express);
+
 var server = express();
 
-var messages = [];
-var responses = [];
+// Configuracion para renderear vistas
+server.engine('html', swig.renderFile);
+server.set('view engine', 'html');
+server.set('views', './app/views');
 
-server.get('/', function (req , res) {
-	setTimeout(function(){
-		debugger;
-		res.send('hello world');
-	},2000);
-});
-server.get('/supervisor', function (req, res){
-	res.send('Supervisor es Genial!! :P');
-});
+// Agregamos post, cookie y sessiones
 
-server.get('/messages',function (req,res) {
-	//res.send(messages+'<script>setTimeout(function(){window.location.reload()},1000)</script>');
-	responses.push(res);	
-});
-
-server.get('/messages/:message', function (req, res) {
-	messages.push(req.params.message);
-	responses.forEach(function(res){
-		res.send(messages+'<script>window.location.reload()</script>');	
-	});
+server.configure(function() {
+	server.use(express.logger());
+	server.use(express.cookieParser());
+	server.use(express.bodyParser());
 	
-	res.send('Your message is : '+ req.params.message);	
+	server.use(express.session({
+		secret : "lolcatz",
+		store  : new RedisStore({})
+		// store  : new RedisStore({
+		//	host : conf.redis.host,
+		//	port : conf.redis.port,
+		//	user : conf.redis.user,
+		//	pass : conf.redis.pass
+		// });	
+	}));
 });
+
+
+server.get('/', function (req, res) {
+	res.render('home');
+});
+
+server.post('/log-in', function (req, res) {
+	req.session.user = req.body.username;
+	res.redirect('/app');
+	debugger;
+});
+
+server.get('/app', function (req, res) {
+	res.render('app', {user : req.session.user});
+
+});
+
 
 server.listen(3000);
