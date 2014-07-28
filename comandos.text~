@@ -1,0 +1,14 @@
+comandos.text
+
+
+1.- lo ejecutamos sin dependencias 
+	npm install express -save  //agrega una dependecia a package.json
+librerias que no deben faltar en nodejs modo DEBUG
+	npm install -g supervisor
+	npm install -g node-inspector
+libreria producion
+	npm install -g forever
+	forever C:\Users\Raúl\AppData\Roaming\npm\node_modules\node-inspector\bin\inspector --web-port=9999
+
+
+supervisor --debug server.js
